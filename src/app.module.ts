@@ -4,13 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    AccountsModule,
-    PrismaModule,
-  ],
+  imports: [AccountsModule, PrismaModule],
   controllers: [],
   providers: [],
 })

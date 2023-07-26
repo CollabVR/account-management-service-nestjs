@@ -1,12 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { QueryBus } from '@nestjs/cqrs';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { RoleEntity } from '../domain/role.entity';
+import { GetRolesQuery } from '../infrastructure/queries/get-roles.query';
 
 @Controller('roles')
+@ApiTags('roles')
 export class RolesController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly queryBus: QueryBus) {}
 
   @Get()
-  getRoles() {
-    return this.prisma.role.findMany();
+  @ApiOkResponse({ type: RoleEntity, isArray: true })
+  async getRoles(): Promise<RoleEntity[]> {
+    return this.queryBus.execute(new GetRolesQuery());
   }
 }
