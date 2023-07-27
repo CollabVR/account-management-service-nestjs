@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RoleEntity } from '../domain/role.entity';
-import { GetRolesQuery } from '../infrastructure/queries/get-roles.query';
+import { GetRolesQuery } from '../infrastructure/queries';
 
 @Controller('roles')
 @ApiTags('roles')

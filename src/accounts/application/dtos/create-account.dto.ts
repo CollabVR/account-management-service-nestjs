@@ -5,7 +5,6 @@ import {
   IsNotEmpty,
   IsStrongPassword,
 } from 'class-validator';
-import { RoleEntity } from 'src/accounts/domain/role.entity';
 
 export class CreateAccountDto {
   @IsEmail()
@@ -25,6 +24,6 @@ export class CreateAccountDto {
   lastName: string;
 
   @ArrayNotEmpty()
-  @ApiProperty()
-  roles: RoleEntity[];
+  @ApiProperty({ type: [Number] })
+  rolesId: number[];
 }
