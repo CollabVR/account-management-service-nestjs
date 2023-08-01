@@ -1,16 +1,20 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { CommandBus } from '@nestjs/cqrs';
-import { ApiTags } from '@nestjs/swagger';
-import { SignInDto } from '../application/dtos';
-import { SignInCommand } from '../infrastructure/commands';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { SignInDto, TokensDto } from '../application/dtos';
+import { SignInQuery } from '../infrastructure/queries';
 
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
-  constructor(private readonly commandBuss: CommandBus) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
   @Post('local/signin')
-  signIn(@Body() signInDto: SignInDto): Promise<any> {
-    return this.commandBuss.execute(new SignInCommand(signInDto));
+  @ApiOkResponse({ type: TokensDto })
+  signIn(@Body() signInDto: SignInDto): Promise<TokensDto> {
+    return this.queryBus.execute(new SignInQuery(signInDto));
   }
 }

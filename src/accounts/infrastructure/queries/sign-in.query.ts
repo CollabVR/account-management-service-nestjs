@@ -1,5 +1,5 @@
 import { SignInDto } from 'src/accounts/application/dtos';
 
-export class SignInCommand {
+export class SignInQuery {
   constructor(public readonly signInDto: SignInDto) {}
 }

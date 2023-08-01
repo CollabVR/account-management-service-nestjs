@@ -26,6 +26,7 @@ async function bootstrap() {
     .setTitle('Account Management Service')
     .setDescription('API Description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
