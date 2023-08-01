@@ -5,7 +5,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
@@ -23,7 +22,7 @@ export class AccountsController {
 
   @Post()
   @ApiCreatedResponse({ type: AccountEntity })
-  async createAccount(
+  createAccount(
     @Body() createAccountDto: CreateAccountDto,
   ): Promise<AccountEntity> {
     return this.commandBuss.execute(new CreateAccountCommand(createAccountDto));
@@ -31,7 +30,7 @@ export class AccountsController {
 
   @Patch(':id')
   @ApiCreatedResponse({ type: AccountEntity })
-  async updateAccount(
+  updateAccount(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateAccountDto: UpdateAccountDto,
   ): Promise<AccountEntity> {
