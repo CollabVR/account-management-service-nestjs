@@ -15,7 +15,6 @@ import {
 	UpdateAccountCommand,
 	VerifyEmailCommand,
 } from '../infrastructure/commands';
-import { GetEmailVerificationCodeQuery } from '../infrastructure/queries';
 
 @Controller('accounts')
 @ApiTags('accounts')
@@ -30,12 +29,8 @@ export class AccountsController {
 	async createAccount(
 		@Body() createAccountDto: CreateAccountDto,
 	): Promise<AccountEntity> {
-		const dbCode = await this.queryBus.execute(
-			new GetEmailVerificationCodeQuery(createAccountDto.email),
-		);
 		await this.commandBuss.execute(
 			new VerifyEmailCommand(
-				dbCode,
 				createAccountDto.emailVerificationCode,
 				createAccountDto.email,
 			),

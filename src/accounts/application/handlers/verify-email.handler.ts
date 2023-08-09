@@ -7,8 +7,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
 	constructor(private readonly prisma: PrismaService) {}
 
-	execute(command: VerifyEmailCommand): Promise<any> {
-		if (command.code !== command.dbCode) {
+	async execute(command: VerifyEmailCommand): Promise<any> {
+		const emailVerification = await this.prisma.emailVerification.findUnique({
+			where: {
+				email: command.email,
+			},
+		});
+		if (command.code !== emailVerification.code) {
 			throw new BadRequestException('Invalid email verification code');
 		}
 		return this.prisma.emailVerification.delete({

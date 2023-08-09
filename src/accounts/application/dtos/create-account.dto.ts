@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 
 export class CreateAccountDto {
+	//TODO: Restrict email to be unique to domain (e.g. @upc.edu.pe)
 	@IsEmail()
 	@ApiProperty()
 	email: string;
