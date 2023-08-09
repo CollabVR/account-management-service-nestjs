@@ -1,29 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  ArrayNotEmpty,
-  IsEmail,
-  IsNotEmpty,
-  IsStrongPassword,
+	ArrayNotEmpty,
+	IsEmail,
+	IsNotEmpty,
+	IsNumber,
+	IsStrongPassword,
 } from 'class-validator';
 
 export class CreateAccountDto {
-  @IsEmail()
-  @ApiProperty()
-  email: string;
+	@IsEmail()
+	@ApiProperty()
+	email: string;
 
-  @IsStrongPassword()
-  @ApiProperty()
-  password: string;
+	@IsStrongPassword()
+	@ApiProperty()
+	password: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
-  firstName: string;
+	@IsNotEmpty()
+	@ApiProperty()
+	firstName: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
-  lastName: string;
+	@IsNotEmpty()
+	@ApiProperty()
+	lastName: string;
 
-  @ArrayNotEmpty()
-  @ApiProperty({ type: [Number] })
-  rolesId: number[];
+	@ArrayNotEmpty()
+	@ApiProperty({ type: [Number] })
+	rolesId: number[];
+
+	@IsNumber()
+	@ApiProperty()
+	emailVerificationCode: number;
 }
