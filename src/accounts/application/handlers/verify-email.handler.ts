@@ -16,6 +16,7 @@ export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
 		if (command.code !== emailVerification.code) {
 			throw new BadRequestException('Invalid email verification code');
 		}
+		console.log('HERE');
 		return this.prisma.emailVerification.delete({
 			where: {
 				email: command.email,

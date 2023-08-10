@@ -10,6 +10,7 @@ import { ForbiddenException } from '@nestjs/common';
 export class CreateAccountHandler
 	implements ICommandHandler<CreateAccountCommand>
 {
+	//TODO: When sending a wrong role id, no error is shown but account is not created
 	constructor(private readonly prisma: PrismaService) {}
 	async execute(command: CreateAccountCommand): Promise<AccountEntity> {
 		try {
