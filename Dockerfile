@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 RUN npm install 
-RUN prisma generate
+RUN npx prisma generate
 
 COPY . .
 RUN npm run build
@@ -25,7 +25,7 @@ COPY --from=build /usr/src/app/dist ./dist
 COPY package*.json ./
 
 RUN npm install  --only=production
-RUN prisma generate
+RUN npx prisma generate
 
 RUN rm package*.json
 
