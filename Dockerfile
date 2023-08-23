@@ -27,7 +27,6 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 RUN npm install  --only=production
-RUN npx prisma generate
 
 RUN rm package*.json
 
