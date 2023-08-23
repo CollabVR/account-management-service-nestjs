@@ -2,6 +2,7 @@
 /dist
 /node_modules
 
+#shoul ignore for security .env and docker-compose.yaml
 # Logs
 logs
 *.log
