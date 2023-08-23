@@ -3,6 +3,7 @@ FROM node:20-alpine AS build
 WORKDIR /usr/src/app
 
 COPY package*.json ./
+COPY prisma ./prisma/
 RUN npm install 
 RUN npx prisma generate
 
@@ -23,6 +24,7 @@ ENV NODE_ENV=${NODE_ENV}
 COPY --from=build /usr/src/app/dist ./dist
 
 COPY package*.json ./
+COPY prisma ./prisma/
 
 RUN npm install  --only=production
 RUN npx prisma generate
