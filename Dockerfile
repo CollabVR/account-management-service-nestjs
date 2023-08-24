@@ -1,35 +1,28 @@
-FROM node:20-alpine AS build
-
+FROM node:18 as build
 WORKDIR /usr/src/app
-
-COPY package*.json ./
-COPY prisma ./prisma/
-RUN npm install 
-RUN npx prisma generate
-
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
 COPY . .
+RUN npx prisma generate
 RUN npm run build
 
+FROM node:18-slim
 
-
-#PROD STAGE
-
-FROM node:20-alpine 
+RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
 
 WORKDIR /usr/src/app
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+COPY --chown=node:node --from=build /usr/src/app/.env .env
+COPY --chown=node:node --from=build /usr/src/app/package.json .
+COPY --chown=node:node --from=build /usr/src/app/package-lock.json .
 
-COPY --from=build /usr/src/app/dist ./dist
+RUN npm install --omit=dev
 
-COPY package*.json ./
-COPY prisma ./prisma/
+COPY --chown=node:node --from=build /usr/src/app/node_modules/.prisma/client  ./node_modules/.prisma/client
 
-RUN npm install  --only=production
+ENV NODE_ENV production
+EXPOSE 3100
 
-RUN rm package*.json
-
-EXPOSE 3000
-
-CMD ["node", "dist/main.js"]
+CMD ["dumb-init", "node", "dist/src/main"]
