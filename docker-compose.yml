@@ -13,7 +13,7 @@ services:
       - MAIL_FROM=diegojohnson46@gmail.com
       - PORT=3100
     ports:
-      - '3100:3000'
+      - '3100:3100'
     depends_on:
       - database
     networks:
