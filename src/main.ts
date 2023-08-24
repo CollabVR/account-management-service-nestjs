@@ -33,7 +33,7 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, swaggerConfig);
 	SwaggerModule.setup('api', app, document);
 	const configService = app.get(ConfigService);
-	const port = configService.get<number>('port');
+	const port = configService.get<number>('PORT');
 	await app.listen(port, () => console.log(`Running in port ${port}`));
 	console.log(`Application is running on: ${await app.getUrl()}`);
 }
