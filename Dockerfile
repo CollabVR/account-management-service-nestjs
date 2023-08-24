@@ -14,7 +14,7 @@ RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
 WORKDIR /usr/src/app
 
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-COPY --chown=node:node --from=build /usr/src/app/.env .env
+# COPY --chown=node:node --from=build /usr/src/app/.env .env
 COPY --chown=node:node --from=build /usr/src/app/package.json .
 COPY --chown=node:node --from=build /usr/src/app/package-lock.json .
 
