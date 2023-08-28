@@ -1,13 +1,5 @@
-import {
-	Body,
-	Controller,
-	Param,
-	ParseIntPipe,
-	Patch,
-	Post,
-} from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { Controller } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 import { AccountEntity } from '../domain/account.entity';
 import { CreateAccountDto, UpdateAccountDto } from '../application/dtos';
 import {
@@ -15,20 +7,17 @@ import {
 	UpdateAccountCommand,
 	VerifyEmailCommand,
 } from '../infrastructure/commands';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('accounts')
-@ApiTags('accounts')
 export class AccountsController {
-	constructor(
-		private readonly commandBuss: CommandBus,
-		private readonly queryBus: QueryBus,
-	) {}
+	constructor(private readonly commandBuss: CommandBus) {}
 
-	@Post()
-	@ApiCreatedResponse({ type: AccountEntity })
+	@MessagePattern('create-account')
 	async createAccount(
-		@Body() createAccountDto: CreateAccountDto,
+		createAccountDto: CreateAccountDto,
 	): Promise<AccountEntity> {
+		console.log('createAccount', createAccountDto);
 		await this.commandBuss.execute(
 			new VerifyEmailCommand(
 				createAccountDto.emailVerificationCode,
@@ -38,14 +27,13 @@ export class AccountsController {
 		return this.commandBuss.execute(new CreateAccountCommand(createAccountDto));
 	}
 
-	@Patch(':id')
-	@ApiCreatedResponse({ type: AccountEntity })
-	updateAccount(
-		@Param('id', ParseIntPipe) id: number,
-		@Body() updateAccountDto: UpdateAccountDto,
-	): Promise<AccountEntity> {
+	@MessagePattern('update-account')
+	updateAccount(data: {
+		id: number;
+		updateAccountDto: UpdateAccountDto;
+	}): Promise<AccountEntity> {
 		return this.commandBuss.execute(
-			new UpdateAccountCommand(id, updateAccountDto),
+			new UpdateAccountCommand(data.id, data.updateAccountDto),
 		);
 	}
 }

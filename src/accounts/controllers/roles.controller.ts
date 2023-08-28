@@ -5,18 +5,14 @@ import { RoleEntity } from '../domain/role.entity';
 import { GetRolesQuery } from '../infrastructure/queries';
 import { JwtAuthGuard } from 'src/auth/guard';
 import { Roles } from 'src/auth/decorator';
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('roles')
-@ApiTags('roles')
 export class RolesController {
-  constructor(private readonly queryBus: QueryBus) {}
+	constructor(private readonly queryBus: QueryBus) {}
 
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  @Roles('admin')
-  @ApiOkResponse({ type: RoleEntity, isArray: true })
-  @ApiBearerAuth()
-  async getRoles(): Promise<RoleEntity[]> {
-    return this.queryBus.execute(new GetRolesQuery());
-  }
+	@MessagePattern('get-roles')
+	async getRoles(): Promise<RoleEntity[]> {
+		return this.queryBus.execute(new GetRolesQuery());
+	}
 }

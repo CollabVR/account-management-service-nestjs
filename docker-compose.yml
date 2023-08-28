@@ -1,41 +1,26 @@
 version: '3'
 services:
-  prisma_studio:
-    build: ./
-    command: [ "sh", "-c", "npx prisma studio" ]
-    depends_on:
-      - backend
-      - database
   backend:
     build: ./
     container_name: account_management_service
-    environment:
-      - DATABASE_URL="postgresql://postgres:123@postgresql_db  :5434/nest?schema=public"
-      - JWT_ACCESS_TOKEN_SECRET="jwtSecret2023"
-      - JWT_REFRESH_TOKEN_SECRET="jwtSecret2023"
-      - MAIL_HOST=smtp.gmail.com
-      - MAIL_USER=diegojohnson46@gmail.com
-      - MAIL_PASSWORD=ldojbhdjqtggyrun
-      - MAIL_FROM=diegojohnson46@gmail.com
-      - PORT=3000
     ports:
-      - '3100:3000'
+      - '3100:3100'
     depends_on:
-      - database
+      - postgres
     networks:
       - collabvr_network
+    env_file:
+      - .env
 
-  database:
+  postgres:
     image: postgres:13
-    container_name: postgresql_db
+    container_name: postgres
+    env_file:
+      - .env
     ports:
-      - 5434:5432
+      - 5432:5432
     volumes:
       - ".postgres-backend:/data/db"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: nest
     networks:
       - collabvr_network
 
