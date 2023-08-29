@@ -40,7 +40,8 @@ export class SignInHandler implements IQueryHandler<SignInQuery> {
 		const tokens = await this.signAccountTokens(
 			account.id,
 			account.email,
-			account.roles,
+			account.firstName + " " + account.lastName,
+			account.roles, 
 		);
 		return tokens;
 	}
@@ -49,6 +50,7 @@ export class SignInHandler implements IQueryHandler<SignInQuery> {
 	async signAccountTokens(
 		accountId: number,
 		email: string,
+		fullName: string,
 		roles: RoleEntity[],
 	): Promise<TokensDto> {
 		const [accessToken, refreshToken] = await Promise.all([
@@ -56,6 +58,7 @@ export class SignInHandler implements IQueryHandler<SignInQuery> {
 				{
 					sub: accountId,
 					email,
+					fullName: fullName,
 					roles: roles,
 				},
 				{
