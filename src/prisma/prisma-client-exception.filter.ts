@@ -1,10 +1,16 @@
-import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
+import {
+	ArgumentsHost,
+	Catch,
+	ExceptionFilter,
+	HttpStatus,
+} from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
+import { RpcException } from '@nestjs/microservices';
 import { Prisma } from '@prisma/client';
 import { Response } from 'express';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
-export class PrismaClientExceptionFilter extends BaseExceptionFilter {
+export class PrismaClientExceptionFilter implements ExceptionFilter {
 	catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
 		const ctx = host.switchToHttp();
 		const response = ctx.getResponse<Response>();
@@ -21,7 +27,7 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
 			// TODO catch other error codes (e.g. 'P2000' or 'P2025')
 			default:
 				// default 500 error code
-				super.catch(exception, host);
+				throw new RpcException(exception.message);
 				break;
 		}
 	}

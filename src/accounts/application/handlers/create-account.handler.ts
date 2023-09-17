@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { ForbiddenException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 
 @CommandHandler(CreateAccountCommand)
 export class CreateAccountHandler
@@ -32,10 +33,10 @@ export class CreateAccountHandler
 		} catch (error) {
 			if (error instanceof PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
-					throw new ForbiddenException('Credentials Taken');
+					throw new RpcException('Credentials Taken');
 				}
 			} else {
-				throw error;
+				throw new RpcException(error);
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { RpcException } from '@nestjs/microservices';
 import { VerifyEmailCommand } from 'src/accounts/infrastructure/commands';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -14,7 +15,7 @@ export class VerifyEmailHandler implements ICommandHandler<VerifyEmailCommand> {
 			},
 		});
 		if (command.code !== emailVerification.code) {
-			throw new BadRequestException('Invalid email verification code');
+			throw new RpcException('Invalid email verification code');
 		}
 		return this.prisma.emailVerification.delete({
 			where: {

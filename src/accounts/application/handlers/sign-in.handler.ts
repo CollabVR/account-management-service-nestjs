@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { TokensDto } from '../dtos';
 import { SignInQuery } from 'src/accounts/infrastructure/queries';
+import { RpcException } from '@nestjs/microservices';
 
 @QueryHandler(SignInQuery)
 export class SignInHandler implements IQueryHandler<SignInQuery> {
@@ -28,20 +29,20 @@ export class SignInHandler implements IQueryHandler<SignInQuery> {
 			}),
 		);
 
-		if (!account) throw new ForbiddenException('Credentials Incorrect');
+		if (!account) throw new RpcException('Credentials Incorrect');
 
 		const pwMatches = await argon.verify(
 			account.password,
 			command.signInDto.password,
 		);
 
-		if (!pwMatches) throw new ForbiddenException('Credentials Incorrect');
+		if (!pwMatches) throw new RpcException('Credentials Incorrect');
 
 		const tokens = await this.signAccountTokens(
 			account.id,
 			account.email,
-			account.firstName + " " + account.lastName,
-			account.roles, 
+			account.firstName + ' ' + account.lastName,
+			account.roles,
 		);
 		return tokens;
 	}

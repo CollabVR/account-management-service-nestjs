@@ -24,10 +24,7 @@ async function bootstrap() {
 
 	// apply transform to all responses
 	app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
-	// apply PrismaClientExceptionFilter to entire application, requires HttpAdapterHost because it extends BaseExceptionFilter
-	const { httpAdapter } = app.get(HttpAdapterHost);
-	app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+	app.useGlobalFilters(new PrismaClientExceptionFilter());
 
 	await app.listen().then(() => console.log(`Running in port ${port}`));
 }

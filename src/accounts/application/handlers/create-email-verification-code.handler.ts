@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { RpcException } from '@nestjs/microservices';
 import { CreateEmailVerificationCodeCommand } from 'src/accounts/infrastructure/commands';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -18,7 +19,7 @@ export class CreateEmailVerificationCodeHandler
 			});
 		} catch (error) {
 			console.log(error);
-			throw error;
+			throw new RpcException(error);
 		}
 	}
 }
