@@ -23,7 +23,9 @@ export class AuthController {
 		await this.commandBus.execute(
 			new CreateEmailVerificationCodeCommand(email, code),
 		);
-		return this.mailService.sendEmailVerificationCode(email, code);
+		return this.mailService.sendEmailVerificationCode(email, code)
+		.then(() => ({ message: 'Email verification code sent' }))
+		.catch(() => ({ message: 'Email verification code not sent' }));
 	}
 
 	private generateRandomCode(): number {

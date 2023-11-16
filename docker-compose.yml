@@ -4,21 +4,21 @@ services:
     build: ./
     container_name: account_management_service
     ports:
-      - '3100:3100'
+      - '${BACKEND_PORT}:3000'
     depends_on:
-      - postgres
+      - accounts_db
     networks:
       - collabvr_network
     env_file:
       - .env
 
-  postgres:
+  accounts_db:
     image: postgres:13
-    container_name: postgres
+    container_name: accounts_db
     env_file:
       - .env
     ports:
-      - 5432:5432
+      - '${DB_PORT}:5432'
     volumes:
       - ".postgres-backend:/data/db"
     networks:
